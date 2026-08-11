@@ -119,10 +119,14 @@ class _HealthCheckHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Bot attivo.")
 
-  def do_HEAD(self):  # noqa: N802
+    def do_HEAD(self):  # noqa: N802
+        # Alcuni servizi di monitoraggio (es. UptimeRobot) usano richieste
+        # HEAD invece di GET: senza questo metodo il server risponderebbe
+        # 501 e il monitor risulterebbe sempre "Down".
         self.send_response(200)
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
+
     def log_message(self, format, *args):  # silenzia i log delle richieste
         pass
 
